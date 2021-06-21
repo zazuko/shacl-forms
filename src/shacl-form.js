@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
 import { rdfs, sh } from './namespace.js'
+import { selectComponent } from './components.js'
 
 /**
  * Renders a form from a SHACL shape.
@@ -20,9 +21,12 @@ export class ShaclForm extends LitElement {
   }
 
   render() {
+    const component = selectComponent(this.shape, this.data)
+
     return html`
-    <p>Shape: ${this.shape?.term?.value}</p>
-    <p>Data: ${this.data?.term?.value}</p>
+    <form>
+      ${component.render(this.shape, this.data)}
+    </form>
     `
   }
 }
