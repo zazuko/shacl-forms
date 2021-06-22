@@ -16,11 +16,11 @@ export const nodeShape = {
 
   render(shape, data, context) {
     const properties = shape.out(sh.property)
-    const groupsTerms = new TermSet(properties.map(property => property.out(sh.group).term))
+    const groupsTerms = new TermSet(properties.map(property => property.out(sh.group).term).filter(Boolean))
     const groups = [...groupsTerms]
       .map(term => shape.node(term))
       .sort((group1, group2) => Number(group1.out(sh.order)?.value ?? Infinity) - Number(group2.out(sh.order)?.value ?? Infinity))
-    const ungroupedProperties = properties.filter(property => !property.out(sh.group).value)
+    const ungroupedProperties = properties.filter(property => !property.out(sh.group).value).toArray()
 
     const renderPropertyValue = (property, value, canRemove) => {
       const component = selectComponent(property)
@@ -43,7 +43,7 @@ export const nodeShape = {
     }
 
     const renderProperty = property => {
-      const label = property.out(sh.name).value
+      const label = property.out(sh.name).value ?? property.out(sh.path).value
       const path = property.out(sh.path).term
       const maxCount = Number(property.out(sh.maxCount).value ?? Infinity)
       const minCount = Number(property.out(sh.minCount).value ?? 0)

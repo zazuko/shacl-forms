@@ -3,6 +3,35 @@ import clownface from 'clownface'
 import { dash, ex, rdf, rdfs, schema, sh, xsd } from '../namespace.js'
 
 export const shape = clownface({ dataset: $rdf.dataset(), factory: $rdf })
+  .node(ex.PersonShape)
+  .addOut(rdf.type, sh.NodeShape)
+  .addOut(rdfs.label, 'Person shape')
+  .addOut(rdfs.comment, 'Defines the structure of a person')
+  .addOut(sh.targetClass, schema.Person)
+  .addOut(sh.property, ex.PersonShape_givenName, property => {
+    property
+      .addOut(rdf.type, sh.PropertyShape)
+      .addOut(sh.path, schema.givenName)
+      .addOut(sh.name, $rdf.literal('First name'))
+  })
+  .addOut(sh.property, ex.PersonShape_familyName, property => {
+    property
+      .addOut(rdf.type, sh.PropertyShape)
+      .addOut(sh.path, schema.familyName)
+      .addOut(sh.name, $rdf.literal('Last name'))
+  })
+  .addOut(sh.property, ex.PersonShape_address, property => {
+    property
+      .addOut(rdf.type, sh.PropertyShape)
+      .addOut(sh.path, schema.address)
+      .addOut(dash.editor, dash.DetailsEditor)
+      .addOut(sh.node, ex.AustralianAddressShape)
+      .addOut(sh.class, schema.PostalAddress)
+      .addOut(sh.nodeKind, sh.IRI)
+      .addOut(sh.group, ex.AddressPropertyGroup)
+  })
+
+shape
   .node(ex.AustralianAddressShape)
   .addOut(rdf.type, sh.NodeShape)
   .addOut(rdfs.label, 'Australian address shape')
@@ -93,12 +122,15 @@ clownface({ dataset: shape.dataset, factory: $rdf })
 
 
 export const data = clownface({ dataset: $rdf.dataset(), factory: $rdf })
-  .node(ex.anAddress)
-  .addOut(rdf.type, schema.PostalAddress)
-  .addOut(schema.streetAddress, $rdf.literal('3 Teewah Close'))
-  .addOut(schema.addressLocality, $rdf.literal('Kewarra Beach'))
-  .addOut(schema.addressRegion, $rdf.literal('QLD'))
-  .addOut(schema.postalCode, $rdf.literal('4879'))
-  .addOut(schema.email, $rdf.literal('holger@knublauch.com'))
-  .addOut(schema.email, $rdf.literal('holger@topquadrant.com'))
-  .addOut(rdfs.label, $rdf.literal('Holger\'s Address'))
+  .node(ex.aPerson)
+  .addOut(schema.address, ex.anAddress, address => {
+    address
+      .addOut(rdf.type, schema.PostalAddress)
+      .addOut(schema.streetAddress, $rdf.literal('3 Teewah Close'))
+      .addOut(schema.addressLocality, $rdf.literal('Kewarra Beach'))
+      .addOut(schema.addressRegion, $rdf.literal('QLD'))
+      .addOut(schema.postalCode, $rdf.literal('4879'))
+      .addOut(schema.email, $rdf.literal('holger@knublauch.com'))
+      .addOut(schema.email, $rdf.literal('holger@topquadrant.com'))
+      .addOut(rdfs.label, $rdf.literal('Holger\'s Address'))
+  })
