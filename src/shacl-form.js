@@ -1,5 +1,6 @@
+import * as $rdf from '@rdfjs/dataset'
 import { LitElement, html, css } from 'lit-element'
-import { rdfs, sh } from './namespace.js'
+import { sh } from './namespace.js'
 import { selectComponent } from './components.js'
 
 /**
@@ -30,12 +31,41 @@ export class ShaclForm extends LitElement {
 
   render() {
     const component = selectComponent(this.shape, this.data)
+    const onSubmit = () => {
+      console.log('submit')
+    }
 
     return html`
-    <form>
-      ${component.render(this.shape, this.data)}
+    <form @submit="${onSubmit}">
+      ${component.render(this.shape, this.data, this)}
+
+      <button type="submit">Save</button>
     </form>
     `
+  }
+
+  addValue(data, property) {
+    const path = property.out(sh.path).term
+    const datatype = property.out(sh.datatype)
+
+    data.addOut(path, $rdf.literal('', datatype))
+
+    this.requestUpdate('data')
+  }
+
+  removeValue(data, property) {
+    data.deleteIn()
+    this.requestUpdate('data')
+  }
+
+  updateValue(data, newValue, property) {
+    const path = property.out(sh.path).term
+    const datatype = property.out(sh.datatype)
+
+    data.in(path).addOut(path, $rdf.literal(newValue, datatype))
+    data.deleteIn(path)
+
+    this.requestUpdate('data')
   }
 }
 

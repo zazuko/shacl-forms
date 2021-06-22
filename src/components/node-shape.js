@@ -14,7 +14,7 @@ export const nodeShape = {
     return 0
   },
 
-  render(shape, data) {
+  render(shape, data, context) {
     const properties = shape.out(sh.property)
     const groupsTerms = new TermSet(properties.map(property => property.out(sh.group).term))
     const groups = [...groupsTerms]
@@ -22,13 +22,22 @@ export const nodeShape = {
       .sort((group1, group2) => Number(group1.out(sh.order)?.value ?? Infinity) - Number(group2.out(sh.order)?.value ?? Infinity))
     const ungroupedProperties = properties.filter(property => !property.out(sh.group).value)
 
-    const renderPropertyValue = (property, value) => {
+    const renderPropertyValue = (property, value, canRemove) => {
       const component = selectComponent(property)
+
+      const removeValue = (e) => {
+        e.preventDefault()
+        context.removeValue(value, property)
+      }
+
+      const updateValue = (newValue) => {
+        context.updateValue(value, newValue, property)
+      }
 
       return html`
       <div>
-        ${component.render(property, value)}
-        <button type="button">-</button>
+        ${component.render(property, value, context, updateValue)}
+        ${canRemove ? html`<button type="button" @click="${removeValue}">-</button>` : ''}
       </div>
       `
     }
@@ -36,7 +45,12 @@ export const nodeShape = {
     const renderProperty = property => {
       const label = property.out(sh.name).value
       const path = property.out(sh.path).term
-      const values = path && data.out(path)
+      const values = (path && data.out(path)) ?? []
+
+      const addValue = (e) => {
+        e.preventDefault()
+        context.addValue(data, property)
+      }
 
       return html`
         <label>
@@ -44,7 +58,7 @@ export const nodeShape = {
           <div>
             ${values.map(value => renderPropertyValue(property, value))}
           </div>
-          <button type="button">+</button>
+          <button type="button" @click="${addValue}">+</button>
         </label>
       `
     }
