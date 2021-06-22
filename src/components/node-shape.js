@@ -45,7 +45,11 @@ export const nodeShape = {
     const renderProperty = property => {
       const label = property.out(sh.name).value
       const path = property.out(sh.path).term
-      const values = (path && data.out(path)) ?? []
+      const maxCount = Number(property.out(sh.maxCount).value ?? Infinity)
+      const minCount = Number(property.out(sh.minCount).value ?? 0)
+      const values = (path && data.out(path).toArray()) ?? []
+      const canAdd = values.length < maxCount
+      const canRemove = values.length > minCount
 
       const addValue = (e) => {
         e.preventDefault()
@@ -56,9 +60,9 @@ export const nodeShape = {
         <label>
           <span>${label}</span>
           <div>
-            ${values.map(value => renderPropertyValue(property, value))}
+            ${values.map(value => renderPropertyValue(property, value, canRemove))}
           </div>
-          <button type="button" @click="${addValue}">+</button>
+          ${canAdd ? html`<button type="button" @click="${addValue}">+</button>` : ''}
         </label>
       `
     }
