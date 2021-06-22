@@ -6,6 +6,14 @@ import { selectComponent } from './components.js'
  * Renders a form from a SHACL shape.
  */
 export class ShaclForm extends LitElement {
+  static get styles() {
+    return css`
+    label {
+      display: block;
+    }
+    `
+  }
+
   static get properties() {
     return {
       /**

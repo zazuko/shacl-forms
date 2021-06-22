@@ -1,8 +1,14 @@
 import { defaultComponent } from './components/default-component.js'
+import { dashTextArea } from './components/editors/dash-textarea.js'
+import { dashTextField } from './components/editors/dash-textfield.js'
+import { nodeShape } from './components/node-shape.js'
 import { dash } from './namespace.js'
 
 const components = [
   defaultComponent,
+  nodeShape,
+  dashTextArea,
+  dashTextField,
 ]
 
 export function register (component) {
@@ -13,13 +19,13 @@ export function selectComponent (shape, data) {
   const shapeEditor = shape.out(dash.editor).term
 
   if (shapeEditor) {
-    const shapeComponent = components.find(({ editor }) => editor.equals(shapeEditor))
+    const shapeComponent = components.find(({ editor }) => editor && editor.equals(shapeEditor))
 
-    if (!shapeComponent) {
-      throw new Error(`Editor ${shapeEditor.value} defined by shape ${shape.term.value} is not supported`)
+    if (shapeComponent) {
+      return shapeComponent
+    } else {
+      console.log(`Editor ${shapeEditor.value} defined by shape ${shape.term.value} is not supported`)
     }
-
-    return shapeComponent
   }
 
   const matchingComponents = matchComponent(shape, data)
