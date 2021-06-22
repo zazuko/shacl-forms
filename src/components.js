@@ -1,4 +1,5 @@
 import { defaultComponent } from './components/default-component.js'
+import { dashDetails } from './components/editors/dash-details.js'
 import { dashTextArea } from './components/editors/dash-textarea.js'
 import { dashTextField } from './components/editors/dash-textfield.js'
 import { nodeShape } from './components/node-shape.js'
@@ -7,6 +8,7 @@ import { dash } from './namespace.js'
 const components = [
   defaultComponent,
   nodeShape,
+  dashDetails,
   dashTextArea,
   dashTextField,
 ]

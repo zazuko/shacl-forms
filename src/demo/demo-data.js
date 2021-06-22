@@ -28,7 +28,7 @@ export const shape = clownface({ dataset: $rdf.dataset(), factory: $rdf })
       .addOut(sh.node, ex.AustralianAddressShape)
       .addOut(sh.class, schema.PostalAddress)
       .addOut(sh.nodeKind, sh.IRI)
-      .addOut(sh.group, ex.AddressPropertyGroup)
+      .addOut(sh.name, $rdf.literal('address'))
   })
 
 shape

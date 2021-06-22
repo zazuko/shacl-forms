@@ -46,20 +46,30 @@ export class ShaclForm extends LitElement {
 
   addValue(data, property) {
     const path = property.out(sh.path).term
-    const datatype = property.out(sh.datatype)
+    const datatype = property.out(sh.datatype).term
+    const targetClass = property.out(sh.targetClass).term
+    const nodeKind = property.out(sh.nodeKind).term
 
-    data.addOut(path, $rdf.literal('', datatype))
+    if (targetClass) {
+      data.addOut(path, $rdf.blankNode(), newValue => {
+        newValue.addOut(rdf.type, targetClass)
+      })
+    } else if (sh.IRI.equals(nodeKind)) {
+      data.addOut(path, $rdf.blankNode())
+    } else {
+      data.addOut(path, $rdf.literal('', datatype))
+    }
 
     this.requestUpdate('data')
   }
 
   removeValue(data, property) {
-    data.deleteIn()
+    deleteRecursive(data, property)
     this.requestUpdate('data')
   }
 
   updateValue(data, newValue, property) {
-    const path = property.out(sh.path).term
+    const path = property.out(sh.path)
     const datatype = property.out(sh.datatype)
 
     data.in(path).addOut(path, $rdf.literal(newValue, datatype))
@@ -67,6 +77,20 @@ export class ShaclForm extends LitElement {
 
     this.requestUpdate('data')
   }
+}
+
+function deleteRecursive(data, property) {
+  const path = property.out(sh.path)
+  const nestedShape = property.out(sh.node)
+
+  if (nestedShape.term) {
+    const nestedProperties = nestedShape.out(sh.property).toArray()
+    for (const property of nestedProperties) {
+      deleteRecursive(data.out(property.out(sh.path)), property)
+    }
+  }
+
+  data.deleteIn(path)
 }
 
 window.customElements.define('shacl-form', ShaclForm)
