@@ -15,7 +15,7 @@ export const dashTextField = {
     return 10
   },
 
-  render(shape, data, context, updateValue) {
+  render({ shape, data }, context, updateValue) {
     const value = data?.term?.value ?? ''
     const update = (e) => updateValue(e.target.value)
 

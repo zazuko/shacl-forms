@@ -14,29 +14,29 @@ export const nodeShape = {
     return 0
   },
 
-  render(shape, data, context) {
-    const properties = shape.out(sh.property)
+  render(state, context) {
+    const properties = state.properties
     const groupsTerms = new TermSet(properties.map(property => property.out(sh.group).term).filter(Boolean))
     const groups = [...groupsTerms]
-      .map(term => shape.node(term))
+      .map(term => state.shape.node(term))
       .sort((group1, group2) => Number(group1.out(sh.order)?.value ?? Infinity) - Number(group2.out(sh.order)?.value ?? Infinity))
-    const ungroupedProperties = properties.filter(property => !property.out(sh.group).value).toArray()
+    const ungroupedProperties = properties.filter(property => !property.out(sh.group).value)
 
-    const renderPropertyValue = (property, value, canRemove) => {
-      const component = selectComponent(property)
+    const renderPropertyValue = (valueState, canRemove) => {
+      const component = selectComponent(valueState.shape, valueState.data)
 
       const removeValue = (e) => {
         e.preventDefault()
-        context.removeValue(value, property)
+        context.removeValue(valueState)
       }
 
       const updateValue = (newValue) => {
-        context.updateValue(value, newValue, property)
+        context.updateValue(valueState, newValue)
       }
 
       return html`
       <div>
-        ${component.render(property, value, context, updateValue)}
+        ${component.render(valueState, context, updateValue)}
         ${canRemove ? html`<button type="button" @click="${removeValue}">-</button>` : ''}
       </div>
       `
@@ -47,20 +47,20 @@ export const nodeShape = {
       const path = property.out(sh.path).term
       const maxCount = Number(property.out(sh.maxCount).value ?? Infinity)
       const minCount = Number(property.out(sh.minCount).value ?? 0)
-      const values = (path && data.out(path).toArray()) ?? []
+      const values = (path && state.values.get(path)) ?? []
       const canAdd = values.length < maxCount
       const canRemove = values.length > minCount
 
       const addValue = (e) => {
         e.preventDefault()
-        context.addValue(data, property)
+        context.addValue(state, property)
       }
 
       return html`
         <label>
           <span>${label}</span>
           <div>
-            ${values.map(value => renderPropertyValue(property, value, canRemove))}
+            ${values.map(valueState => renderPropertyValue(valueState, canRemove))}
           </div>
           ${canAdd ? html`<button type="button" @click="${addValue}">+</button>` : ''}
         </label>
@@ -69,7 +69,7 @@ export const nodeShape = {
 
     const renderGroup = group => {
       const groupTitle = group.out(rdfs.label).value
-      const groupProperties = properties.has(sh.group, group)
+      const groupProperties = properties.filter(property => group.term.equals(property.out(sh.group).term))
 
       return html`
       <fieldset>

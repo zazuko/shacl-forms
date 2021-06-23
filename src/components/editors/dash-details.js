@@ -14,9 +14,7 @@ export const dashDetails = {
     return 0
   },
 
-  render(shape, data, context) {
-    const childShape = shape.out(sh.node)
-
-    return nodeShape.render(childShape, data, context)
+  render(state, context) {
+    return nodeShape.render(state, context)
   },
 }

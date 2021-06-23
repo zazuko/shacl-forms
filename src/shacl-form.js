@@ -1,7 +1,7 @@
-import * as $rdf from '@rdfjs/dataset'
 import { LitElement, html, css } from 'lit-element'
 import { sh } from './namespace.js'
 import { selectComponent } from './components.js'
+import { ShapeState } from './shape-state.js'
 
 /**
  * Renders a form from a SHACL shape.
@@ -20,77 +20,53 @@ export class ShaclForm extends LitElement {
       /**
        * A clownface pointer to the SHACL shape to render
        */
-      shape: { type: Object },
+      shape: { type: Object, attribute: false },
 
       /**
        * A clownface pointer to the data
        */
-      data: { type: Object }
+      data: { type: Object, attribute: false }
     }
   }
 
+  update(changedProperties) {
+
+    if (changedProperties.has('data') || changedProperties.has('shape')) {
+      this._state = new ShapeState(this.shape, this.data)
+    }
+
+    super.update(changedProperties)
+  }
+
   render() {
-    const component = selectComponent(this.shape, this.data)
+    const component = selectComponent(this._state.shape, this._state.data)
     const onSubmit = () => {
       console.log('submit')
     }
 
     return html`
     <form @submit="${onSubmit}">
-      ${component.render(this.shape, this.data, this)}
+      ${component.render(this._state, this)}
 
       <button type="submit">Save</button>
     </form>
     `
   }
 
-  addValue(data, property) {
-    const path = property.out(sh.path).term
-    const datatype = property.out(sh.datatype).term
-    const targetClass = property.out(sh.targetClass).term
-    const nodeKind = property.out(sh.nodeKind).term
-
-    if (targetClass) {
-      data.addOut(path, $rdf.blankNode(), newValue => {
-        newValue.addOut(rdf.type, targetClass)
-      })
-    } else if (sh.IRI.equals(nodeKind)) {
-      data.addOut(path, $rdf.blankNode())
-    } else {
-      data.addOut(path, $rdf.literal('', datatype))
-    }
-
-    this.requestUpdate('data')
+  addValue(state, property) {
+    state.add(property)
+    this.requestUpdate('_state')
   }
 
-  removeValue(data, property) {
-    deleteRecursive(data, property)
-    this.requestUpdate('data')
+  removeValue(state) {
+    state.delete()
+    this.requestUpdate('_state')
   }
 
-  updateValue(data, newValue, property) {
-    const path = property.out(sh.path)
-    const datatype = property.out(sh.datatype)
-
-    data.in(path).addOut(path, $rdf.literal(newValue, datatype))
-    data.deleteIn(path)
-
-    this.requestUpdate('data')
+  updateValue(state, newValue) {
+    state.update(newValue)
+    this.requestUpdate('_state')
   }
-}
-
-function deleteRecursive(data, property) {
-  const path = property.out(sh.path)
-  const nestedShape = property.out(sh.node)
-
-  if (nestedShape.term) {
-    const nestedProperties = nestedShape.out(sh.property).toArray()
-    for (const property of nestedProperties) {
-      deleteRecursive(data.out(property.out(sh.path)), property)
-    }
-  }
-
-  data.deleteIn(path)
 }
 
 window.customElements.define('shacl-form', ShaclForm)

@@ -5,7 +5,7 @@ export const defaultComponent = {
     return 1
   },
 
-  render(shape, data) {
+  render({ shape }) {
     return html`No component found for <code>${shape?.term?.value}</code>`
   },
 }

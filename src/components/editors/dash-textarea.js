@@ -25,7 +25,7 @@ export const dashTextArea = {
     return 0
   },
 
-  render(shape, data) {
+  render({ shape, data }) {
     return html`<textarea>${data.term.value}</textarea>`
   },
 }
