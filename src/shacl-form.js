@@ -40,17 +40,21 @@ export class ShaclForm extends LitElement {
 
   render() {
     const component = selectComponent(this._state.shape, this._state.data)
-    const onSubmit = () => {
-      console.log('submit')
-    }
 
     return html`
-    <form @submit="${onSubmit}">
+    <form @submit="${this.onSubmit}">
       ${component.render(this._state, this)}
 
       <button type="submit">Save</button>
     </form>
     `
+  }
+
+  onSubmit(e) {
+    e.preventDefault()
+
+    const event = new CustomEvent('submit', { detail: { data: this.data } })
+    this.dispatchEvent(event)
   }
 
   addValue(state, property) {
