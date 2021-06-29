@@ -12,7 +12,7 @@ export class ShaclDemo extends LitElement {
 
   render() {
     return html`
-    <h1>SHACL forms demo</h1>
+    <h1>SHACL form demo</h1>
     <shacl-form .shape="${this.shape}" .data="${this.data}" @submit="${this.onSubmit}"></shacl-form>
     <div>
       <h2>Data</h2>
