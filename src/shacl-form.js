@@ -25,12 +25,18 @@ export class ShaclForm extends LitElement {
       /**
        * A clownface pointer to the data
        */
-      data: { type: Object, attribute: false }
+      data: { type: Object, attribute: false },
+
+      /**
+       * Language used to extract labels and descriptions.
+       *
+       * Can be a string (e.g. `fr`) or an array of strings (e.g. `['fr', 'en', '*']`)
+       */
+      language: { type: String | Array, attribute: false, required: false },
     }
   }
 
   update(changedProperties) {
-
     if (changedProperties.has('data') || changedProperties.has('shape')) {
       this._state = new ShapeState(this.shape, this.data)
     }

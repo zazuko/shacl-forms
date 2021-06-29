@@ -12,13 +12,15 @@ export const shape = clownface({ dataset: $rdf.dataset(), factory: $rdf })
     property
       .addOut(rdf.type, sh.PropertyShape)
       .addOut(sh.path, schema.givenName)
-      .addOut(sh.name, $rdf.literal('First name'))
+      .addOut(sh.name, $rdf.literal('First name', 'en'))
+      .addOut(sh.name, $rdf.literal('Prénom', 'fr'))
   })
   .addOut(sh.property, ex.PersonShape_familyName, property => {
     property
       .addOut(rdf.type, sh.PropertyShape)
       .addOut(sh.path, schema.familyName)
-      .addOut(sh.name, $rdf.literal('Last name'))
+      .addOut(sh.name, $rdf.literal('Last name', 'en'))
+      .addOut(sh.name, $rdf.literal('Nom', 'fr'))
   })
   .addOut(sh.property, ex.PersonShape_address, property => {
     property
@@ -28,7 +30,7 @@ export const shape = clownface({ dataset: $rdf.dataset(), factory: $rdf })
       .addOut(sh.node, ex.AustralianAddressShape)
       .addOut(sh.class, schema.PostalAddress)
       .addOut(sh.nodeKind, sh.IRI)
-      .addOut(sh.name, $rdf.literal('address'))
+      .addOut(sh.name, $rdf.literal('Address'))
   })
 
 shape
@@ -111,13 +113,14 @@ shape
 clownface({ dataset: shape.dataset, factory: $rdf })
   .node(ex.AddressPropertyGroup)
   .addOut(rdf.type, sh.PropertyGroup)
-  .addOut(rdfs.label, $rdf.literal('Address'))
+  .addOut(rdfs.label, $rdf.literal('Address', 'en'))
   .addOut(sh.order, $rdf.literal('0', xsd.decimal))
 
 clownface({ dataset: shape.dataset, factory: $rdf })
   .node(ex.ContactPropertyGroup)
   .addOut(rdf.type, sh.PropertyGroup)
-  .addOut(rdfs.label, $rdf.literal('Contact'))
+  .addOut(rdfs.label, $rdf.literal('Contact', 'en'))
+  .addOut(rdfs.label, $rdf.literal('Kontact', 'de'))
   .addOut(sh.order, $rdf.literal('1', xsd.decimal))
 
 

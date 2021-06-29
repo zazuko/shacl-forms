@@ -15,6 +15,7 @@ export const nodeShape = {
   },
 
   render(state, context) {
+    const language = context.language
     const properties = state.properties
     const groupsTerms = new TermSet(properties.map(property => property.out(sh.group).term).filter(Boolean))
     const groups = [...groupsTerms]
@@ -43,7 +44,7 @@ export const nodeShape = {
     }
 
     const renderProperty = property => {
-      const label = property.out(sh.name).value ?? property.out(sh.path).value
+      const label = property.out(sh.name, { language }).value ?? property.out(sh.path).value
       const path = property.out(sh.path).term
       const maxCount = Number(property.out(sh.maxCount).value ?? Infinity)
       const minCount = Number(property.out(sh.minCount).value ?? 0)
@@ -68,7 +69,7 @@ export const nodeShape = {
     }
 
     const renderGroup = group => {
-      const groupTitle = group.out(rdfs.label).value
+      const groupTitle = group.out(rdfs.label, { language }).value
       const groupProperties = properties.filter(property => group.term.equals(property.out(sh.group).term))
 
       return html`
