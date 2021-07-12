@@ -2,11 +2,12 @@ import { html } from 'lit-element'
 import * as ns from '../../namespace'
 
 export const dashTextField = {
-  editor: ns.dash.TextFieldEditor,
-
   match(shape, data) {
+    const editor = shape.out(ns.dash.editor).term
     const types = shape.out(ns.rdf.type).toArray()
     const datatype = data?.term?.datatype
+
+    if (ns.dash.TextFieldEditor.equals(editor)) return 20
 
     if (!types.some(type => type.term.equals(ns.sh.PropertyShape))) return 0
 

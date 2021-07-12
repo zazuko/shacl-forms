@@ -2,14 +2,13 @@ import * as ns from '../../namespace'
 import { nodeShape } from '../node-shape'
 
 export const dashDetails = {
-  editor: ns.dash.DetailsEditor,
-
   match(shape, data) {
+    const editor = shape.out(ns.dash.editor).term
     const nodeKind = shape.out(ns.sh.nodeKind).term
 
-    if (ns.sh.IRI.equals(nodeKind)) {
-      return null
-    }
+    if (ns.dash.DetailsEditor.equals(editor)) return 20
+
+    if (ns.sh.IRI.equals(nodeKind)) return null
 
     return 0
   },
