@@ -1,6 +1,6 @@
-import * as $rdf from '@rdfjs/dataset'
+import * as rdf from '@rdfjs/dataset'
 import TermMap from '@rdfjs/term-map'
-import { rdf, sh } from './namespace.js'
+import * as ns from './namespace'
 
 export class ShapeState {
   /**
@@ -13,13 +13,13 @@ export class ShapeState {
     this.data = data
     this.parent = parent
 
-    const nestedShape = shape.out(sh.node)
+    const nestedShape = shape.out(ns.sh.node)
     const shapeForProperties = nestedShape.term ? nestedShape : shape
 
-    this.properties = shapeForProperties.out(sh.property).toArray()
+    this.properties = shapeForProperties.out(ns.sh.property).toArray()
 
     this.values = this.properties.reduce((properties, property) => {
-      const path = property.out(sh.path).term
+      const path = property.out(ns.sh.path).term
       const values = data.out(path).map(value => new ShapeState(property, value, this))
 
       properties.set(path, values)
@@ -29,23 +29,23 @@ export class ShapeState {
   }
 
   add(property) {
-    const path = property.out(sh.path).term
-    const datatype = property.out(sh.datatype).term
-    const targetClass = property.out(sh.node).out(sh.targetClass).term || property.out(sh.targetClass).term
-    const nodeKind = property.out(sh.nodeKind).term
+    const path = property.out(ns.sh.path).term
+    const datatype = property.out(ns.sh.datatype).term
+    const targetClass = property.out(ns.sh.node).out(ns.sh.targetClass).term || property.out(ns.sh.targetClass).term
+    const nodeKind = property.out(ns.sh.nodeKind).term
 
     let newValuePointer
     if (targetClass) {
-      this.data.addOut(path, $rdf.blankNode(), newValue => {
-        newValue.addOut(rdf.type, targetClass)
+      this.data.addOut(path, rdf.blankNode(), newValue => {
+        newValue.addOut(ns.rdf.type, targetClass)
         newValuePointer = newValue
       })
-    } else if (sh.IRI.equals(nodeKind)) {
-      this.data.addOut(path, $rdf.blankNode(), newValue => {
+    } else if (ns.sh.IRI.equals(nodeKind)) {
+      this.data.addOut(path, rdf.blankNode(), newValue => {
         newValuePointer = newValue
       })
     } else {
-      this.data.addOut(path, $rdf.literal('', datatype), newValue => {
+      this.data.addOut(path, rdf.literal('', datatype), newValue => {
         newValuePointer = newValue
       })
     }
@@ -60,10 +60,10 @@ export class ShapeState {
   }
 
   update(newValue) {
-    const path = this.shape.out(sh.path).term
-    const datatype = this.shape.out(sh.datatype).term
+    const path = this.shape.out(ns.sh.path).term
+    const datatype = this.shape.out(ns.sh.datatype).term
 
-    const newTerm = $rdf.literal(newValue, datatype)
+    const newTerm = rdf.literal(newValue, datatype)
 
     // Update dataset
     const parent = this.data.in(path)
@@ -75,7 +75,7 @@ export class ShapeState {
   }
 
   delete() {
-    const path = this.shape.out(sh.path).term
+    const path = this.shape.out(ns.sh.path).term
 
     // Update intermediate data structure
     const values = this.parent.values.get(path)
@@ -88,13 +88,13 @@ export class ShapeState {
 }
 
 function deleteRecursive(data, property) {
-  const path = property.out(sh.path)
-  const nestedShape = property.out(sh.node)
+  const path = property.out(ns.sh.path)
+  const nestedShape = property.out(ns.sh.node)
 
   if (nestedShape.term) {
-    const nestedProperties = nestedShape.out(sh.property).toArray()
+    const nestedProperties = nestedShape.out(ns.sh.property).toArray()
     for (const property of nestedProperties) {
-      deleteRecursive(data.out(property.out(sh.path)), property)
+      deleteRecursive(data.out(property.out(ns.sh.path)), property)
     }
   }
 

@@ -1,6 +1,6 @@
 import { css, LitElement, html } from 'lit-element'
-import '../shacl-form.js';
-import { shape, data } from './demo-data.js'
+import '../shacl-form';
+import { shape, data } from './demo-data'
 
 export class ShaclDemo extends LitElement {
   static get styles() {

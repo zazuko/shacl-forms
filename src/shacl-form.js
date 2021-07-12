@@ -1,7 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
-import { sh } from './namespace.js'
-import { selectComponent } from './components.js'
-import { ShapeState } from './shape-state.js'
+import { selectComponent } from './components'
+import { ShapeState } from './shape-state'
 
 /**
  * Renders a form from a SHACL shape.

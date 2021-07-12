@@ -1,16 +1,16 @@
 import { html } from 'lit-element'
-import { dash, rdf, sh, xsd } from '../../namespace'
+import * as ns from '../../namespace'
 
 export const dashTextArea = {
-  editor: dash.TextAreaEditor,
+  editor: ns.dash.TextAreaEditor,
 
   match(shape, data) {
-    const types = shape.out(rdf.type).toArray()
-    const singleLine = shape.out(dash.singleLine).value
-    const isString = data && xsd.string.equals(data.term.datatype)
-    const allowedDatatypes = shape.out(sh.datatype).toArray()
+    const types = shape.out(ns.rdf.type).toArray()
+    const singleLine = shape.out(ns.dash.singleLine).value
+    const isString = data && ns.xsd.string.equals(data.term.datatype)
+    const allowedDatatypes = shape.out(ns.sh.datatype).toArray()
 
-    if (!types.some(type => type.term.equals(sh.PropertyShape))) return 0
+    if (!types.some(type => type.term.equals(ns.sh.PropertyShape))) return 0
 
     if (singleLine === 'true') return 0
 
@@ -18,7 +18,7 @@ export const dashTextArea = {
 
     if (isString) return 5
 
-    if (allowedDatatypes.some(datatype => datatype.term.equals(xsd.string))) return 2
+    if (allowedDatatypes.some(datatype => datatype.term.equals(ns.xsd.string))) return 2
 
     // TODO: Return `null` if property has a custom datatype, not from xsd or rdf
 

@@ -1,13 +1,13 @@
 import TermSet from '@rdfjs/term-set'
 import { html } from 'lit-element'
-import { selectComponent } from '../components.js'
-import { rdf, rdfs, sh } from '../namespace.js'
+import { selectComponent } from '../components'
+import * as ns from '../namespace'
 
 export const nodeShape = {
   match(shape, data) {
-    const types = shape.out(rdf.type).toArray()
+    const types = shape.out(ns.rdf.type).toArray()
 
-    if (types.some(type => type.term.equals(sh.NodeShape))) {
+    if (types.some(type => type.term.equals(ns.sh.NodeShape))) {
       return 10
     }
 
@@ -17,11 +17,11 @@ export const nodeShape = {
   render(state, context) {
     const language = context.language
     const properties = state.properties
-    const groupsTerms = new TermSet(properties.map(property => property.out(sh.group).term).filter(Boolean))
+    const groupsTerms = new TermSet(properties.map(property => property.out(ns.sh.group).term).filter(Boolean))
     const groups = [...groupsTerms]
       .map(term => state.shape.node(term))
-      .sort((group1, group2) => Number(group1.out(sh.order)?.value ?? Infinity) - Number(group2.out(sh.order)?.value ?? Infinity))
-    const ungroupedProperties = properties.filter(property => !property.out(sh.group).value)
+      .sort((group1, group2) => Number(group1.out(ns.sh.order)?.value ?? Infinity) - Number(group2.out(ns.sh.order)?.value ?? Infinity))
+    const ungroupedProperties = properties.filter(property => !property.out(ns.sh.group).value)
 
     const renderPropertyValue = (valueState, canRemove) => {
       const component = selectComponent(valueState.shape, valueState.data)
@@ -44,10 +44,10 @@ export const nodeShape = {
     }
 
     const renderProperty = property => {
-      const label = property.out(sh.name, { language }).value ?? property.out(sh.path).value
-      const path = property.out(sh.path).term
-      const maxCount = Number(property.out(sh.maxCount).value ?? Infinity)
-      const minCount = Number(property.out(sh.minCount).value ?? 0)
+      const label = property.out(ns.sh.name, { language }).value ?? property.out(ns.sh.path).value
+      const path = property.out(ns.sh.path).term
+      const maxCount = Number(property.out(ns.sh.maxCount).value ?? Infinity)
+      const minCount = Number(property.out(ns.sh.minCount).value ?? 0)
       const values = (path && state.values.get(path)) ?? []
       const canAdd = values.length < maxCount
       const canRemove = values.length > minCount
@@ -69,8 +69,8 @@ export const nodeShape = {
     }
 
     const renderGroup = group => {
-      const groupTitle = group.out(rdfs.label, { language }).value
-      const groupProperties = properties.filter(property => group.term.equals(property.out(sh.group).term))
+      const groupTitle = group.out(ns.rdfs.label, { language }).value
+      const groupProperties = properties.filter(property => group.term.equals(property.out(ns.sh.group).term))
 
       return html`
       <fieldset>

@@ -1,9 +1,9 @@
-import { defaultComponent } from './components/default-component.js'
-import { dashDetails } from './components/editors/dash-details.js'
-import { dashTextArea } from './components/editors/dash-textarea.js'
-import { dashTextField } from './components/editors/dash-textfield.js'
-import { nodeShape } from './components/node-shape.js'
-import { dash } from './namespace.js'
+import { defaultComponent } from './components/default-component'
+import { dashDetails } from './components/editors/dash-details'
+import { dashTextArea } from './components/editors/dash-textarea'
+import { dashTextField } from './components/editors/dash-textfield'
+import { nodeShape } from './components/node-shape'
+import * as ns from './namespace'
 
 const components = [
   defaultComponent,
@@ -18,7 +18,7 @@ export function register (component) {
 }
 
 export function selectComponent (shape, data) {
-  const shapeEditor = shape.out(dash.editor).term
+  const shapeEditor = shape.out(ns.dash.editor).term
 
   if (shapeEditor) {
     const shapeComponent = components.find(({ editor }) => editor && editor.equals(shapeEditor))

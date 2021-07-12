@@ -1,16 +1,16 @@
 import { html } from 'lit-element'
-import { dash, rdf, sh, xsd } from '../../namespace'
+import * as ns from '../../namespace'
 
 export const dashTextField = {
-  editor: dash.TextFieldEditor,
+  editor: ns.dash.TextFieldEditor,
 
   match(shape, data) {
-    const types = shape.out(rdf.type).toArray()
+    const types = shape.out(ns.rdf.type).toArray()
     const datatype = data?.term?.datatype
 
-    if (!types.some(type => type.term.equals(sh.PropertyShape))) return 0
+    if (!types.some(type => type.term.equals(ns.sh.PropertyShape))) return 0
 
-    if (rdf.langString.equals(datatype) || xsd.boolean.equals(datatype)) return 0
+    if (ns.rdf.langString.equals(datatype) || ns.xsd.boolean.equals(datatype)) return 0
 
     return 10
   },
