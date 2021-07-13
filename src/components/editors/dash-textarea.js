@@ -2,6 +2,8 @@ import { html } from 'lit-element'
 import * as ns from '../../namespace'
 
 export const dashTextArea = {
+  name: 'TextArea',
+
   match(shape, data) {
     const editor = shape.out(ns.dash.editor).term
     const types = shape.out(ns.rdf.type).toArray()

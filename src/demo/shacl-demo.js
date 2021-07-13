@@ -28,6 +28,7 @@ export class ShaclDemo extends LitElement {
   static get properties() {
     return {
       selectedLanguage: { type: String, attribute: false },
+      advancedMode: { type: Boolean, attribute: false },
     }
   }
 
@@ -38,6 +39,7 @@ export class ShaclDemo extends LitElement {
     this.data = data
     this.languages = ['fr', 'en', 'de', 'it']
     this.selectedLanguage = 'en'
+    this.advancedMode = false
   }
 
   render() {
@@ -46,6 +48,10 @@ export class ShaclDemo extends LitElement {
     }
 
     const language = [this.selectedLanguage, '*']
+
+    const setAdvancedMode = (e) => {
+      this.advancedMode = e.target.checked
+    }
 
     return html`
     <header class="page-header">
@@ -56,6 +62,10 @@ export class ShaclDemo extends LitElement {
           ${language}
         </option>`)}
       </select>
+      <label>
+        Advanced:
+        <input type="checkbox" ?checked="${this.advancedMode}" @input="${setAdvancedMode}" />
+      </label>
     </header>
 
     <div class="main">
@@ -65,6 +75,7 @@ export class ShaclDemo extends LitElement {
         .language="${language}"
         @submit="${this.onSubmit}"
         class="form"
+        ?advanced-mode="${this.advancedMode}"
       ></shacl-form>
 
       <div>

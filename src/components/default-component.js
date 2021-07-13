@@ -1,6 +1,8 @@
 import { html } from 'lit-element'
 
 export const defaultComponent = {
+  name: 'Default',
+
   match(shape, data) {
     return 1
   },

@@ -1,9 +1,11 @@
 import TermSet from '@rdfjs/term-set'
 import { html } from 'lit-element'
-import { selectComponent } from '../components'
+import { matchComponent, selectComponent } from '../components'
 import * as ns from '../namespace'
 
 export const nodeShape = {
+  name: 'NodeShape',
+
   match(shape, data) {
     const types = shape.out(ns.rdf.type).toArray()
 
@@ -17,14 +19,38 @@ export const nodeShape = {
   render(state, context) {
     const language = context.language
     const properties = state.properties
+    const advancedMode = context.advancedMode
     const groupsTerms = new TermSet(properties.map(property => property.out(ns.sh.group).term).filter(Boolean))
     const groups = [...groupsTerms]
       .map(term => state.shape.node(term))
       .sort((group1, group2) => Number(group1.out(ns.sh.order)?.value ?? Infinity) - Number(group2.out(ns.sh.order)?.value ?? Infinity))
     const ungroupedProperties = properties.filter(property => !property.out(ns.sh.group).value)
 
+    const renderComponentSelector = (components, selectedComponent, selectComponent) => {
+      // TODO: Using the name for comparison is not a great idea
+
+      const onSelect = (e) => {
+        const newComponentName = e.target.value
+        const newComponent = components.find(component => newComponentName === component.name)
+
+        selectComponent(newComponent)
+      }
+
+      return html`
+      <select @change="${onSelect}">
+        ${components.map((component, index) => html`
+          <option value="${component.name}" ?selected="${component.name === selectedComponent.name}">
+            ${component.name}
+          </option>
+        `)}
+      </select>
+      `
+    }
+
     const renderPropertyValue = (valueState, canRemove) => {
-      const component = selectComponent(valueState.shape, valueState.data)
+      const components = matchComponent(valueState.shape, valueState.data)
+      const showComponentSelector = advancedMode && components.length > 1
+      const component = valueState.selectedComponent || components[0]
 
       const removeValue = (e) => {
         e.preventDefault()
@@ -35,9 +61,14 @@ export const nodeShape = {
         context.updateValue(valueState, newValue)
       }
 
+      const selectComponent = (newComponent) => {
+        context.selectComponent(valueState, newComponent)
+      }
+
       return html`
       <div>
         ${component.render(valueState, context, updateValue)}
+        ${showComponentSelector ? renderComponentSelector(components, component, selectComponent) : ''}
         ${canRemove ? html`<button type="button" @click="${removeValue}">-</button>` : ''}
       </div>
       `

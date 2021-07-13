@@ -12,6 +12,7 @@ export class ShapeState {
     this.shape = shape
     this.data = data
     this.parent = parent
+    this.selectedComponent = null
 
     const nestedShape = shape.out(ns.sh.node)
     const shapeForProperties = nestedShape.term ? nestedShape : shape

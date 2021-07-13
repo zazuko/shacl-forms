@@ -2,6 +2,8 @@ import * as ns from '../../namespace'
 import { nodeShape } from '../node-shape'
 
 export const dashDetails = {
+  name: 'DetailsEditor',
+
   match(shape, data) {
     const editor = shape.out(ns.dash.editor).term
     const nodeKind = shape.out(ns.sh.nodeKind).term

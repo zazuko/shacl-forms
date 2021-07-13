@@ -32,7 +32,18 @@ export class ShaclForm extends LitElement {
        * Can be a string (e.g. `fr`) or an array of strings (e.g. `['fr', 'en', '*']`)
        */
       language: { type: String | Array, attribute: false, required: false },
+
+      /**
+       * Advanced mode will show a way to switch the editor used for each field.
+       */
+      advancedMode: { type: Boolean, attribute: 'advanced-mode' },
     }
+  }
+
+  constructor() {
+    super()
+
+    this.advancedMode = false
   }
 
   update(changedProperties) {
@@ -74,6 +85,11 @@ export class ShaclForm extends LitElement {
 
   updateValue(state, newValue) {
     state.update(newValue)
+    this.requestUpdate('_state')
+  }
+
+  selectComponent(state, newComponent) {
+    state.selectedComponent = newComponent
     this.requestUpdate('_state')
   }
 }
