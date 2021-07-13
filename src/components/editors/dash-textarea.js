@@ -28,7 +28,10 @@ export const dashTextArea = {
     return 0
   },
 
-  render({ shape, data }) {
-    return html`<textarea>${data.term.value}</textarea>`
+  render({ shape, data }, context, updateValue) {
+    const value = data?.term?.value ?? ''
+    const update = (e) => updateValue(e.target.value)
+
+    return html`<textarea @input="${update}">${value}</textarea>`
   },
 }
