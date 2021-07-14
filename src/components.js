@@ -1,7 +1,9 @@
 import { defaultComponent } from './components/default-component'
 import { dashDetails } from './components/editors/dash-details'
 import { dashTextArea } from './components/editors/dash-textarea'
+import { dashTextAreaWithLang } from './components/editors/dash-textareawithlang'
 import { dashTextField } from './components/editors/dash-textfield'
+import { dashTextFieldWithLang } from './components/editors/dash-textfieldwithlang'
 import { nodeShape } from './components/node-shape'
 
 const components = [
@@ -9,7 +11,9 @@ const components = [
   nodeShape,
   dashDetails,
   dashTextArea,
+  dashTextAreaWithLang,
   dashTextField,
+  dashTextFieldWithLang,
 ]
 
 export function register (component) {

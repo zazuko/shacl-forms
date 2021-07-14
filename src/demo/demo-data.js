@@ -32,6 +32,13 @@ export const shape = clownface({ dataset: rdf.dataset(), factory: rdf })
       .addOut(ns.sh.nodeKind, ns.sh.IRI)
       .addOut(ns.sh.name, rdf.literal('Address'))
   })
+  .addOut(ns.sh.property, ns.ex.PersonShape_comment, property => {
+    property
+      .addOut(ns.rdf.type, ns.sh.PropertyShape)
+      .addOut(ns.sh.path, ns.schema.description)
+      .addOut(ns.dash.singleLine, rdf.literal('false', ns.xsd.boolean))
+      .addOut(ns.sh.name, rdf.literal('Comment', 'en'))
+  })
 
 shape
   .node(ns.ex.AustralianAddressShape)
@@ -137,3 +144,5 @@ export const data = clownface({ dataset: rdf.dataset(), factory: rdf })
       .addOut(ns.schema.email, rdf.literal('holger@topquadrant.com'))
       .addOut(ns.rdfs.label, rdf.literal('Holger\'s Address'))
   })
+  .addOut(ns.schema.description, rdf.literal('Hello'))
+  .addOut(ns.schema.description, rdf.literal('cześć', 'pl'))

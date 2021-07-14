@@ -53,6 +53,21 @@ export class ShaclDemo extends LitElement {
       this.advancedMode = e.target.checked
     }
 
+    const renderTerm = (term) => {
+      if (term.termType === 'Literal') {
+        const language = term.language
+          ? `@${term.language}`
+          : ''
+        const datatype = term.datatype
+          ? `^^${term.datatype.value}`
+          : ''
+
+        return `${term.value}${language}${datatype}`
+      } else {
+        return term.value
+      }
+    }
+
     return html`
     <header class="page-header">
       <h1>SHACL form demo</h1>
@@ -73,6 +88,7 @@ export class ShaclDemo extends LitElement {
         .shape="${this.shape}"
         .data="${this.data}"
         .language="${language}"
+        .languages="${this.languages}"
         @submit="${this.onSubmit}"
         class="form"
         ?advanced-mode="${this.advancedMode}"
@@ -83,7 +99,7 @@ export class ShaclDemo extends LitElement {
         <p>(Submit to update)</p>
         <code>
           ${[...this.data.dataset].map(quad => html`
-            ${quad.subject.value} ${quad.predicate.value} ${quad.object.value}<br>`)}
+            ${renderTerm(quad.subject)} ${renderTerm(quad.predicate)} ${renderTerm(quad.object)}<br>`)}
         </code>
       </div>
     </div>

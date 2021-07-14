@@ -64,7 +64,9 @@ export class ShapeState {
     const path = this.shape.out(ns.sh.path).term
     const datatype = this.shape.out(ns.sh.datatype).term
 
-    const newTerm = rdf.literal(newValue, datatype)
+    const newTerm = typeof newValue === 'string'
+      ? rdf.literal(newValue, datatype)
+      : newValue
 
     // Update dataset
     const parent = this.data.in(path)

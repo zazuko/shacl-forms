@@ -34,6 +34,13 @@ export class ShaclForm extends LitElement {
       language: { type: String | Array, attribute: false, required: false },
 
       /**
+       * Languages available for literals.
+       *
+       * Array of strings (e.g. `['fr', 'en']`)
+       */
+      languages: { type: Array, attribute: false, required: false },
+
+      /**
        * Advanced mode will show a way to switch the editor used for each field.
        */
       advancedMode: { type: Boolean, attribute: 'advanced-mode' },
@@ -43,6 +50,7 @@ export class ShaclForm extends LitElement {
   constructor() {
     super()
 
+    this.languages = []
     this.advancedMode = false
   }
 
