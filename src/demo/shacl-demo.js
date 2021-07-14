@@ -62,7 +62,7 @@ export class ShaclDemo extends LitElement {
           ? `^^${term.datatype.value}`
           : ''
 
-        return `${term.value}${language}${datatype}`
+        return `"${term.value}"${language}${datatype}`
       } else {
         return term.value
       }
