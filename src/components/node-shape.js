@@ -53,9 +53,17 @@ export const nodeShape = {
       const path = property.out(sh.path).term
       const maxCount = Number(property.out(sh.maxCount).value || Infinity)
       const minCount = Number(property.out(sh.minCount).value || 0)
+      const mandatory = minCount >= 1
       const values = (path && state.values.get(path)) || []
       const canAdd = values.length < maxCount
       const canRemove = values.length > minCount
+
+      // automatically create mandatory properties
+      if (mandatory && values.length === 0) {
+        context.addValue(state, property)
+
+        return renderProperty(property)
+      }
 
       const addValue = (e) => {
         e.preventDefault()

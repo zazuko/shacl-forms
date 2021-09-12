@@ -33,9 +33,15 @@ export class ShapeState {
     const datatype = property.out(sh.datatype).term
     const targetClass = property.out(sh.node).out(sh.targetClass).term || property.out(sh.targetClass).term
     const nodeKind = property.out(sh.nodeKind).term
+    const options = property.out(sh.in).isList() ? [...property.out(sh.in).list()] : null
 
     let newValuePointer
-    if (targetClass) {
+    if (options && options.length === 1) {
+      // if a single option is given, use that value
+      this.data.addOut(path, options[0].term, newValue => {
+        newValuePointer = newValue
+      })
+    } else if (targetClass) {
       this.data.addOut(path, $rdf.blankNode(), newValue => {
         newValue.addOut(rdf.type, targetClass)
         newValuePointer = newValue
