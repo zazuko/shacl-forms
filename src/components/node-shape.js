@@ -20,7 +20,12 @@ export const nodeShape = {
     const groupsTerms = new TermSet(properties.map(property => property.out(sh.group).term).filter(Boolean))
     const groups = [...groupsTerms]
       .map(term => state.shape.node(term))
-      .sort((group1, group2) => Number(group1.out(sh.order)?.value ?? Infinity) - Number(group2.out(sh.order)?.value ?? Infinity))
+      .sort((group1, group2) => {
+        const order1 = group1.out(sh.order)
+        const order2 = group2.out(sh.order)
+
+        return Number((order1 && order1.value) || Infinity) - Number((order2 && order2.value) || Infinity)
+      })
     const ungroupedProperties = properties.filter(property => !property.out(sh.group).value)
 
     const renderPropertyValue = (valueState, canRemove) => {
@@ -44,11 +49,11 @@ export const nodeShape = {
     }
 
     const renderProperty = property => {
-      const label = property.out(sh.name, { language }).value ?? property.out(sh.path).value
+      const label = property.out(sh.name, { language }).value || property.out(sh.path).value
       const path = property.out(sh.path).term
-      const maxCount = Number(property.out(sh.maxCount).value ?? Infinity)
-      const minCount = Number(property.out(sh.minCount).value ?? 0)
-      const values = (path && state.values.get(path)) ?? []
+      const maxCount = Number(property.out(sh.maxCount).value || Infinity)
+      const minCount = Number(property.out(sh.minCount).value || 0)
+      const values = (path && state.values.get(path)) || []
       const canAdd = values.length < maxCount
       const canRemove = values.length > minCount
 

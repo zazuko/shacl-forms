@@ -41,7 +41,7 @@ export class ShapeState {
         newValuePointer = newValue
       })
     } else if (sh.IRI.equals(nodeKind)) {
-      this.data.addOut(path, $rdf.blankNode(), newValue => {
+      this.data.addOut(path, $rdf.namedNode(), newValue => {
         newValuePointer = newValue
       })
     } else {

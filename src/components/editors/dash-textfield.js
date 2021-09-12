@@ -6,7 +6,7 @@ export const dashTextField = {
 
   match(shape, data) {
     const types = shape.out(rdf.type).toArray()
-    const datatype = data?.term?.datatype
+    const datatype = data && data.term && data.term.datatype
 
     if (!types.some(type => type.term.equals(sh.PropertyShape))) return 0
 
@@ -16,7 +16,7 @@ export const dashTextField = {
   },
 
   render({ shape, data }, context, updateValue) {
-    const value = data?.term?.value ?? ''
+    const value = (data && data.term && data.term.value) || ''
     const update = (e) => updateValue(e.target.value)
 
     return html`<input .value="${value}" @input="${update}" />`

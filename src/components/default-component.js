@@ -6,6 +6,6 @@ export const defaultComponent = {
   },
 
   render({ shape }) {
-    return html`No component found for <code>${shape?.term?.value}</code>`
+    return html`No component found for <code>${shape && shape.term && shape.term.value}</code>`
   },
 }
