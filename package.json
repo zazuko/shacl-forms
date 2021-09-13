@@ -2,15 +2,10 @@
   "name": "shacl-forms",
   "version": "0.0.0",
   "main": "dist/shacl-form.es.js",
-  "exports": {
-    ".": "./dist/shacl-form.es.js"
-  },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "install": "npm run build"
   },
   "dependencies": {
     "@rdfjs/dataset": "^1.1.0",

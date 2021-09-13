@@ -6,9 +6,6 @@ export default defineConfig({
     lib: {
       entry: 'src/shacl-form.js',
       formats: ['es']
-    },
-    rollupOptions: {
-      external: /^lit-element/
     }
   }
 })
