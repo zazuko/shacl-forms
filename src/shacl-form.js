@@ -51,7 +51,7 @@ export class ShaclForm extends LitElement {
     <form @submit="${this.onSubmit}">
       ${component.render(this._state, this)}
 
-      <button type="submit">Save</button>
+      <button type="submit">OK</button>
     </form>
     `
   }
