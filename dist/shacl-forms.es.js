@@ -189,6 +189,6 @@ const tt=window.ShadowRoot&&(void 0===window.ShadyCSS||window.ShadyCSS.nativeSha
     <form @submit="${this.onSubmit}">
       ${t.render(this._state,this)}
 
-      <button type="submit">Save</button>
+      <button type="submit">OK</button>
     </form>
     `}onSubmit(t){t.preventDefault();const e=new CustomEvent("submit",{detail:{data:this.data}});this.dispatchEvent(e)}addValue(t,e){t.add(e),this.requestUpdate("_state")}removeValue(t){t.delete(),this.requestUpdate("_state")}updateValue(t,e){t.update(e),this.requestUpdate("_state")}}window.customElements.define("shacl-form",we);export{we as ShaclForm};
