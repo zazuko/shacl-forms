@@ -36,8 +36,8 @@ export const nodeShape = {
         context.removeValue(valueState)
       }
 
-      const updateValue = (newValue) => {
-        context.updateValue(valueState, newValue)
+      const updateValue = (...args) => {
+        context.updateValue(valueState, ...args)
       }
 
       return html`

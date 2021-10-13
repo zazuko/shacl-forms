@@ -73,8 +73,8 @@ export class ShaclForm extends LitElement {
     this.requestUpdate('_state')
   }
 
-  updateValue(state, newValue) {
-    state.update(newValue)
+  updateValue(state, ...args) {
+    state.update(...args)
     this.requestUpdate('_state')
   }
 }

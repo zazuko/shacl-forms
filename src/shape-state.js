@@ -31,49 +31,65 @@ export class ShapeState {
   add(property) {
     const path = property.out(sh.path).term
     const datatype = property.out(sh.datatype).term
+    const languages = [...property.out(sh.languageIn).list()].map(ptr => ptr.value)
+    const uniqueLanguages = property.out(sh.uniqueLang).value === 'true'
     const targetClass = property.out(sh.node).out(sh.targetClass).term || property.out(sh.targetClass).term
     const nodeKind = property.out(sh.nodeKind).term
     const options = property.out(sh.in).isList() ? [...property.out(sh.in).list()] : null
+    const maxCount = Number(property.out(sh.maxCount).value || Infinity)
+    const minCount = Number(property.out(sh.minCount).value || 0)
+    const fixedCount = maxCount === minCount
 
-    let newValuePointer
+    const newValuePointers = []
+
     if (options && options.length === 1) {
       // if a single option is given, use that value
       this.data.addOut(path, options[0].term, newValue => {
-        newValuePointer = newValue
+        newValuePointers.push(newValue)
       })
     } else if (targetClass) {
       this.data.addOut(path, $rdf.blankNode(), newValue => {
         newValue.addOut(rdf.type, targetClass)
-        newValuePointer = newValue
+        newValuePointers.push(newValue)
       })
     } else if (sh.BlankNode.equals(nodeKind)) {
       this.data.addOut(path, $rdf.blankNode(), newValue => {
-        newValuePointer = newValue
+        newValuePointers.push(newValue)
       })
     } else if (sh.IRI.equals(nodeKind)) {
       this.data.addOut(path, $rdf.namedNode(), newValue => {
-        newValuePointer = newValue
+        newValuePointers.push(newValue)
       })
     } else {
-      this.data.addOut(path, $rdf.literal('', datatype), newValue => {
-        newValuePointer = newValue
-      })
+      if (fixedCount && uniqueLanguages && maxCount === languages.length) {
+        for (const language of languages) {
+          this.data.addOut(path, $rdf.literal('', language), newValue => {
+            newValuePointers.push(newValue)
+          })
+        }
+      } else {
+        this.data.addOut(path, $rdf.literal('', datatype), newValue => {
+          newValuePointers.push(newValue)
+        })
+      }
     }
 
     // Only add new value if it didn't already exist because 2 quads can't be
     // exactly the same in a graph.
     // The UX of this is not great, but it will avoid issues when manipulating the graph.
-    if (!this.values.get(path).some(value => value.data.term.equals(newValuePointer.term))) {
-      const newValue = new ShapeState(property, newValuePointer, this)
-      this.values.get(path).push(newValue)
+    for (const newValuePointer of newValuePointers) {
+      if (!this.values.get(path).some(value => value.data.term.equals(newValuePointer.term))) {
+        const newValue = new ShapeState(property, newValuePointer, this)
+        this.values.get(path).push(newValue)
+      }
     }
   }
 
-  update(newValue) {
+  update(newValue, language) {
     const path = this.shape.out(sh.path).term
     const datatype = this.shape.out(sh.datatype).term
 
-    const newTerm = $rdf.literal(newValue, datatype)
+    const newTerm = $rdf.literal(newValue, language || datatype)
 
     // Update dataset
     const parent = this.data.in(path)
