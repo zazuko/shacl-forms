@@ -1,4 +1,5 @@
 import { defaultComponent } from './components/default-component.js'
+import { dashBooleanSelect } from './components/editors/booleanselect.js'
 import { dashDetails } from './components/editors/dash-details.js'
 import { dashTextArea } from './components/editors/dash-textarea.js'
 import { dashTextField } from './components/editors/dash-textfield.js'
@@ -8,6 +9,7 @@ import { dash } from './namespace.js'
 const components = [
   defaultComponent,
   nodeShape,
+  dashBooleanSelect,
   dashDetails,
   dashTextArea,
   dashTextField,
