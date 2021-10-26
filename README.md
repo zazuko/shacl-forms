@@ -28,4 +28,4 @@ TODO
 
 ## Status
 
-/!\ This library is very experimental and you should not expect any sort of stability or reliability at this point.
+⚠️ This library is very experimental and you should not expect any sort of stability or reliability at this point.
