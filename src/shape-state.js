@@ -87,9 +87,15 @@ export class ShapeState {
 
   update(newValue, language) {
     const path = this.shape.out(sh.path).term
-    const datatype = this.shape.out(sh.datatype).term
+    const { datatype, termType } = this.data.term
 
-    const newTerm = $rdf.literal(newValue, language || datatype)
+    let newTerm
+
+    if (termType === 'NamedNode') {
+      newTerm = $rdf.namedNode(newValue)
+    } else {
+      newTerm = $rdf.literal(newValue, language || datatype)
+    }
 
     // Update dataset
     const parent = this.data.in(path)
