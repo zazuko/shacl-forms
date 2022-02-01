@@ -40,7 +40,7 @@ export const dashEnumSelectEditor = {
           let label = null
 
           if (this.term.termType === 'NamedNode') {
-            label = shape.node(term).out(rdfs.label)
+            label = shape.node(term).out(rdfs.label).values[0]
           }
 
           return label || term.value
