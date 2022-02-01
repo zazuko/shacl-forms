@@ -28,7 +28,9 @@ export const dashEnumSelectEditor = {
   render({ shape, data }, context, updateValue) {
     const selected = data && data.term
 
-    const values = shape.out(sh.in).terms.map(term => {
+    const values = [...shape.out(sh.in).list()].map(ptr => {
+      const term = ptr.term
+
       return {
         html: function () {
           return html`<option ?selected="${this.isSelected()}">${this.label()}</option>`
