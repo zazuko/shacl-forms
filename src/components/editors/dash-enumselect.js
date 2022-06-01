@@ -48,7 +48,7 @@ export const dashEnumSelectEditor = {
           return label || term.value
         },
         onSelect: function () {
-          updateValue(this.term.value)
+          updateValue(this.term)
         },
         term
       }
@@ -62,6 +62,10 @@ export const dashEnumSelectEditor = {
       }
 
       value.onSelect(event)
+    }
+
+    if (values.length > 0 && !values.some(value => value.term.equals(data.term))) {
+      values[0].onSelect()
     }
 
     return html`<select @change="${onChange}" >${values.map(value => value.html())}</select>`

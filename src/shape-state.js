@@ -91,7 +91,9 @@ export class ShapeState {
 
     let newTerm
 
-    if (termType === 'NamedNode') {
+    if (typeof newValue === 'object' && typeof newValue.termType === 'string') {
+      newTerm = newValue
+    } else if (termType === 'NamedNode') {
       newTerm = $rdf.namedNode(newValue)
     } else {
       newTerm = $rdf.literal(newValue, language || datatype)
