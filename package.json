@@ -1,6 +1,6 @@
 {
   "name": "shacl-forms",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "dist/shacl-form.es.js",
   "exports": {
     ".": "./dist/shacl-form.es.js"
