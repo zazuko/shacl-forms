@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@rdfjs/dataset": "^1.1.0",
